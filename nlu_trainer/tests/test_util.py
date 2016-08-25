@@ -9,12 +9,12 @@ class TestUtil(unittest.TestCase):
     self.assertEqual(
       util.phrase_index('the quick brown fox jumps over the lazy dog',
                         'the'),
-      (0, 0)
+      (0, 2)
     )
     self.assertEqual(
       util.phrase_index('the quick brown fox jumps over the lazy dog',
                         'brown fox jumps'),
-      (2, 4)
+      (10, 24)
     )
     self.assertIsNone(
       util.phrase_index('the quick brown fox jumps over the lazy dog',

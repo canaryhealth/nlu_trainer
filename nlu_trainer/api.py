@@ -2,11 +2,14 @@
 '''
 Interface for `NluTrainer`.
 '''
+import yaml
+
 
 class NluTrainer(object):
 
-  def train_set(self, train_file):
-    pass
+  def train_set(self, dataset):
+    for text, intent, entities in dataset:
+      self.train(text, intent, yaml.load(entities))
 
 
   def add_intent(self, intent):

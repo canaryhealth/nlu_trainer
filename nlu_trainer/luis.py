@@ -3,10 +3,13 @@
 Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
 import asset
-from pyswagger import App, Security
+from pyswagger import SwaggerApp
 from pyswagger.contrib.client.requests import Client
+from pyswagger.primitives import SwaggerPrimitive
+from pyswagger.primitives._int import validate_int, create_int
 from pyswagger.utils import jp_compose
 
+from . import util
 from .api import NluTrainer
 
 
@@ -22,8 +25,17 @@ class LuisTrainer(NluTrainer):
   def __init__(self, settings):
     self.sub_key = settings.sub_key
     self.app_id  = settings.app_id
+    # create a customized primitive factory for int because library
+    # impractically chooses not to set default (b/t int32 vs int64) b/c
+    # the Swagger/OpenAPI spec doesn't
+    # https://github.com/mission-liao/pyswagger/issues/65
+    int_factory = SwaggerPrimitive()
+    int_factory.register('integer', '', create_int, validate_int)
+    int_factory.register('integer', None, create_int, validate_int)
     # todo: fix path
-    self.app = App._create_('nlu_trainer/luis_api-1.0.swagger.json')
+    self.app = SwaggerApp.load('nlu_trainer/luis_api-1.0.swagger.json',
+                               prim=int_factory)
+    self.app.prepare()
     self.client = Client()
 
 
@@ -54,21 +66,20 @@ class LuisTrainer(NluTrainer):
 
 
   def train(self, text, intent, entities):
-    # labels = []
-    # for t, e in entities:
-    #   labels.append(dict(EntityType = t,
-    #                      StartToken =,
-    #                      EndToken = ))
+    labels = []
+    for t, e in entities.items():
+      index = util.phrase_index(text, e)
+      if index:
+        labels.append({'EntityType': t,
+                       'StartToken': index[0],
+                       'EndToken': index[1]})
 
-    # self.client.request(
-    #   self.app.resolve(jp_compose(ENTITY_URL)).post(
-    #     appId = self.app_id,
-    #     ExampleText = text,
-    #     SelectedIntentName = intent
-    #     EntityLabels = labels
-    #   )
-    # )
-    pass
+    response = self._request(EXAMPLE_POST,
+                             dict(exampleLabel = {'ExampleText': text,
+                                                  'SelectedIntentName': intent,
+                                                  'EntityLabels': labels}))
+    if response.status != 201:
+      pass # todo: log
 
 
   def predict(self, utterance):

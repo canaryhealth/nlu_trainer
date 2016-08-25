@@ -4,6 +4,7 @@ CLI to train/test Natural Language Understanding system.
 '''
 import argparse
 import ConfigParser
+import csv
 
 from aadict import aadict
 import asset
@@ -29,9 +30,11 @@ def main(args=None):
 
   trainer = asset.symbol(settings.driver)(settings)
   if options.command == TRAIN:
-    trainer.train_set(options.dataset)
-  elif options.command == TEST:
-    trainer.test_set(options.dataset)
+    with open(options.dataset) as csv_file:
+      r = csv.reader(csv_file)
+      trainer.train_set(r)
+  # elif options.command == TEST:
+  #   trainer.test_set(options.dataset)
 
 #------------------------------------------------------------------------------
 main()
