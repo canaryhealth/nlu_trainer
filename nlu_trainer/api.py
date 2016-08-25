@@ -10,6 +10,7 @@ class NluTrainer(object):
   def train_set(self, dataset):
     for text, intent, entities in dataset:
       self.train(text, intent, yaml.load(entities))
+    self.update()
 
 
   def add_intent(self, intent):
@@ -55,5 +56,12 @@ class NluTrainer(object):
             'intent': 'define',
             'entities": {'animal': 'bengal tiger'},
             'score': 0.9408 }
+    '''
+    raise NotImplementedError()
+
+
+  def update(self):
+    '''
+    Update the system with the latest trained data.
     '''
     raise NotImplementedError()

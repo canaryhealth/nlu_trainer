@@ -2,6 +2,9 @@
 '''
 Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
+import json
+
+from aadict import aadict
 import asset
 from pyswagger import SwaggerApp
 from pyswagger.contrib.client.requests import Client
@@ -18,6 +21,7 @@ EXAMPLE_POST    = 'example - Add Label'
 INTENT_POST     = 'intents - Create Intent Classifier'
 PHRASELIST_POST = 'phraselists - Create New Dictionary'
 PREDICT_GET     = 'predict - get Trained Model Predictions'
+UPDATE_POST     = 'train - Train'
 
 
 class LuisTrainer(NluTrainer):
@@ -39,9 +43,10 @@ class LuisTrainer(NluTrainer):
     self.client = Client()
 
 
-  def _request(self, op, body):
+  def _request(self, op, body=None):
     params = dict(appId = self.app_id)
-    params.update(body)
+    if body:
+      params.update(body)
     req, res = self.app.op[op](**params)
     req.header['Ocp-Apim-Subscription-Key'] = self.sub_key
     return self.client.request((req, res))
@@ -82,5 +87,24 @@ class LuisTrainer(NluTrainer):
       pass # todo: log
 
 
-  def predict(self, utterance):
-    pass
+  def predict(self, text):
+    intent = None
+    score = None
+    entities = {}
+
+    response = self._request(PREDICT_GET, dict(example = text))
+    if response.status == 200:
+      body = aadict.d2ar(json.loads(response.raw))
+      for i in body.IntentsResults:
+        # returns the intent with the highest score
+        if i.score > score:
+          score = i.score
+          intent = i.Name
+      for e in body.EntitiesResults:
+         entities[e.name] = e.word
+
+    return (text, intent, entities, score)
+
+
+  def update(self):
+    response = self._request(UPDATE_POST)
