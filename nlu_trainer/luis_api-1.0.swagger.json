@@ -1,0 +1,1922 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Luis Programmatic API",
+    "version": "1.0"
+  },
+  "host": "api.projectoxford.ai",
+  "basePath": "/luis/v1.0/prog",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/apps/{appId}/features": {
+      "get": {
+        "description": "\r\n            gets all of the application features\r\n            ",
+        "operationId": "features - get App Features",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing a list of all phraselist features and a list of all pattern featuers"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/patterns": {
+      "get": {
+        "description": "\r\n            gets all of the application pattern features\r\n            ",
+        "operationId": "patterns - get Patterns",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing a list of all pattern features"
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Creates a new pattern feature\r\n            ",
+        "operationId": "patterns - Create New Regex Feature",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "diceRegexFeature",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiceRegexFeature"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The ID of the newly created feature"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/phraselists": {
+      "get": {
+        "description": "\r\n            gets all of the application phraselist features\r\n            ",
+        "operationId": "phraselists - get Phraselists",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing a list of all phraselist features"
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Creates a new phrase-list feature\r\n            ",
+        "operationId": "phraselists - Create New Dictionary",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "diceDictionaryFeature",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiceDictionaryFeature"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The ID of the newly created phrase-list feature"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/patterns/{patternId}": {
+      "put": {
+        "description": "\r\n            Updates the pattern, the name and the state of the pattern feature\r\n            ",
+        "operationId": "patterns - Update Regex",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patternId",
+            "in": "path",
+            "description": "The ID of the feature to be updated",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "diceRegexFeature",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiceRegexFeature"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            deletes a pattern feature from an application\r\n            ",
+        "operationId": "patterns - delete Regex Feature",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patternId",
+            "in": "path",
+            "description": "The ID of the feature to be deleted",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/phraselists/{phraselistId}": {
+      "put": {
+        "description": "\r\n            Updates the phrases, the state and the name of the phrase-list feature\r\n            ",
+        "operationId": "phraselists - Update Dictionary",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "phraselistId",
+            "in": "path",
+            "description": "The ID of the feature to be updated",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "diceDictionaryFeature",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiceDictionaryFeature"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            deletes a phrase-list feature from an application\r\n            ",
+        "operationId": "phraselists - delete Dictionary Feature",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "phraselistId",
+            "in": "path",
+            "description": "The ID of the feature to be deleted",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/example": {
+      "post": {
+        "description": "\r\n            Adds a labeled example to the specified application\r\n            ",
+        "operationId": "example - Add Label",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "exampleLabel",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ExampleLabel"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/examples": {
+      "post": {
+        "description": "\r\n            Adds a batch of labeled examples to the specified application\r\n            ",
+        "operationId": "examples - Add Batch Labels",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "exampleLabelArray",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ExampleLabelArray"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "A string array determining which labels were added successfully and which were not"
+          }
+        }
+      },
+      "get": {
+        "description": "\r\n            This API should be called before calling the review API to get a list of ids for labeled utterances.\r\n            ",
+        "operationId": "examples - Review Labeled Utterances",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If the App contains any labeled utterances, a list of negative value integers is returned."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/examples/{exampleId}": {
+      "delete": {
+        "description": "\r\n            This API should be called before calling the review API to get a list of ids for labeled utterances.\r\n            ",
+        "operationId": "examples - delete Example Labels",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If the App contains any labeled utterances, a list of negative value integers is returned."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/listprebuilts": {
+      "get": {
+        "description": "\r\n            gets all the available prebuilt entity extractors for the application (Depends on the application Culture).\r\n            ",
+        "operationId": "listprebuilts - get Available Prebuilt Entity Extractors List",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Each list item has the following attributes:\n                ID : this will be used when adding a new prebuilt entity extractor to the application\n                Name : the prebuilt entity extractor name\n                Description : a brief description of the prebuilt entity extractor\n                Examples : some example of the entities the prebuilt entity extractor can capture"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/models": {
+      "get": {
+        "description": "\r\n            Retreives information about the application models.\r\n            ",
+        "operationId": "models - get Model Infos",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of application models infos (Name, Type, ID)."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/intents": {
+      "get": {
+        "description": "\r\n            Retreives information about the intent models.\r\n            ",
+        "operationId": "intents - get Intent Infos",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of intent models infos (Name, Type, ID)."
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Adds an intent classifier to an application\r\n            ",
+        "operationId": "intents - Create Intent Classifier",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "intentModel",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/IntentModel"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Model ID. Note that the ID will be needed when updating or deleting the model"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/entities": {
+      "get": {
+        "description": "\r\n            Retreives information about the entity models.\r\n            ",
+        "operationId": "entities - get Entity Infos",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of entity models infos (Name, Type, ID)."
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Adds an entity extractor to the application\r\n            ",
+        "operationId": "entities - Create Entity Extractor",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "hierarchicalModel",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/HierarchicalModel"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Model ID. Note that the ID will be needed when updating or deleting the model"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/prebuilts": {
+      "get": {
+        "description": "\r\n            Retreives information about the prebuilt entity models.\r\n            ",
+        "operationId": "prebuilts - get Prebuilt Infos",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of prebuilt entity models infos (Name, Type, ID)."
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Adds a list of the available prebuilt entity extractors to the application\r\n            ",
+        "operationId": "prebuilts - Add Prebuilt Entity Extractor",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "prebuiltExtractorNames",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PrebuiltExtractorNames"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/intents/{intentId}": {
+      "get": {
+        "description": "\r\n            Retreives information about the intent models.\r\n            ",
+        "operationId": "intents - get Intent Info",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "intentId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the intent classifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An intent model info (Name, Type, ID)."
+          }
+        }
+      },
+      "put": {
+        "description": "\r\n            Update the name of an intent classifier\r\n            ",
+        "operationId": "intents - Rename Intent Model",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "intentId",
+            "in": "path",
+            "description": "Format - guid. ID of the intent classifier to be renamed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "hierarchicalModel",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/HierarchicalModel"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty response"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            delete an intent classifier from the application\r\n            ",
+        "operationId": "intents - delete Intent Model",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "intentId",
+            "in": "path",
+            "description": "Format - guid. ID of the intent classifier to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty response"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/entities/{entityId}": {
+      "get": {
+        "description": "\r\n            Retreives information about the entity models.\r\n            ",
+        "operationId": "entities - get Entity Info",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "entityId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the entity extractor",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An entity model info (Name, Type, ID, Children)."
+          }
+        }
+      },
+      "put": {
+        "description": "\r\n            Update the name of an entity extractor\r\n            ",
+        "operationId": "entities - Rename Entity Model",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "entityId",
+            "in": "path",
+            "description": "Format - guid. ID of the entity extractor to be renamed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "hierarchicalModel",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/HierarchicalModel"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty response"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            delete an entity extractor from the application\r\n            ",
+        "operationId": "entities - delete Entity Model",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "entityId",
+            "in": "path",
+            "description": "Format - guid. ID of the entity extractor to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty response"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/prebuilts/{prebuiltId}": {
+      "get": {
+        "description": "\r\n            Retreives information about the prebuilt entity models.\r\n            ",
+        "operationId": "prebuilts - get Prebuilt Info",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Input ID of the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "prebuiltId",
+            "in": "path",
+            "description": "Format - guid. prebuilt ID of the application",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A prebuilt entity models info (Name, Type, ID)."
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            delete a prebuilt entity extractor from the application\r\n            ",
+        "operationId": "prebuilts - delete Prebuilt Model",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "prebuiltId",
+            "in": "path",
+            "description": "Format - guid. ID of the prebuilt entity extractor to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty response"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/intents/{intentId}/sample": {
+      "get": {
+        "description": "\r\n            get sample queries received in the endpoint that we think they will enhance a certain model.\r\n            ",
+        "operationId": "sample - Sample Endpoint Queries For Intents",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "intentId",
+            "in": "path",
+            "description": "Format - guid. The target intent classifier model to enhance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "maxQueriesCount",
+            "in": "query",
+            "description": "Maximum number of queries to be returned. Default is set to 10",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If there's no trained model, nothing is returned in the response.\n            If there's a trained model and the active learning algorithm finds any relevant queries, they are returned with the model predictions.\n            If there's a trained model but the active learning algorithm didn't find any relevant queries, an empty list is returned in the response."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/entities/{entityId}/sample": {
+      "get": {
+        "description": "\r\n            get sample queries received in the endpoint that we think they will enhance a certain model.\r\n            ",
+        "operationId": "sample - Sample Endpoint Queries For Entities",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "entityId",
+            "in": "path",
+            "description": "Format - guid. The target entity extractor model to enhance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "maxQueriesCount",
+            "in": "query",
+            "description": "Maximum number of queries to be returned. Default is set to 10",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If there's no trained model, nothing is returned in the response.\n            If there's a trained model and the active learning algorithm finds any relevant queries, they are returned with the model predictions.\n            If there's a trained model but the active learning algorithm didn't find any relevant queries, an empty list is returned in the response."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/search": {
+      "get": {
+        "description": "\r\n            Searches the queries that have been received in the endpoint.\r\n            ",
+        "operationId": "search - Search Endpoint Queries",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchKeywords",
+            "in": "query",
+            "description": "Search keywords.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "maxQueriesCount",
+            "in": "query",
+            "description": "Maximum number of queries to be returned. Default is set to 10",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If the search keywords match any queries received in the endpoint, the matching queries are returned.\n            If there's a trained model, the model predictions are returned with matching queries.\n            If the keywords don't match any queries or no queries have been received in the endpoint, an empty list is returned."
+          }
+        }
+      }
+    },
+    "/apps/{appId}/predict": {
+      "get": {
+        "description": "\r\n            gets the trained model predictions for the input example\r\n            ",
+        "operationId": "predict - get Trained Model Predictions",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The ID for the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "example",
+            "in": "query",
+            "description": "The example text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If the application is trained, the model predictions are returned with each example.\n            If the application is not trained, an empty list is returned."
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            gets the trained model predictions for the input examples\r\n            ",
+        "operationId": "predict - get Train Model Predictions",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The ID for the application",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "examples",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Examples"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "If the application is trained, the model predictions are returned with each example.\n            If the application is not trained, an empty list is returned."
+          }
+        }
+      }
+    },
+    "/apps": {
+      "get": {
+        "description": "\r\n            get list of user's all applications with their metadata\r\n            Metadata : {ID, Name, Description, Culture, Active, PublishDate, URL, AuthKey ,CreatedDate, ModifiedDate, NumberOfIntents, NumberOfEntities, IsTrained}\r\n            ",
+        "operationId": "apps - get Apps",
+        "responses": {
+          "200": {
+            "description": "A list of the user's applications metadata"
+          }
+        }
+      },
+      "post": {
+        "description": "\r\n            Creats a new application\r\n            ",
+        "operationId": "apps - Add App",
+        "parameters": [
+          {
+            "name": "applicationInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ApplicationInfo"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The ID of the newly created application"
+          }
+        }
+      }
+    },
+    "/PersonalAssistantApps": {
+      "get": {
+        "description": "\r\n            gets the endpoint URLs for the prebuilt Cortana applications\r\n            ",
+        "operationId": "PersonalAssistantApps - get Personal Assistant Apps",
+        "responses": {
+          "200": {
+            "description": "A tuple containing the user's subscription key and a dictionary of prebuilt Cortana applications"
+          }
+        }
+      }
+    },
+    "/apps/{appId}": {
+      "get": {
+        "description": "\r\n            gets all created actions in application\r\n            ",
+        "operationId": "apps - get App",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An object containing the application's metadata"
+          }
+        }
+      },
+      "put": {
+        "description": "\r\n            Edit the name or description of application\r\n            ",
+        "operationId": "apps - Update App",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "applicationInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ApplicationInfo"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            Deleting an application\r\n            ",
+        "operationId": "apps - delete App",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/import": {
+      "post": {
+        "description": "\r\n            Imports an application to LUIS, the application's JSON should be included in in the request body.\r\n            ",
+        "operationId": "import - Import Application",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "query",
+            "description": "The imported application name (optional)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "jSONApp",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/JSONApp"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The ID of the newly imported application"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/export": {
+      "get": {
+        "description": "\r\n            Exports a LUIS application to JSON format\r\n            ",
+        "operationId": "export - Export Application",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JSON string of the exported application"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/publish": {
+      "post": {
+        "description": "\r\n            Published the application to an HTTP endpoint\r\n            ",
+        "operationId": "publish - Publish Application",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "agentConfigurationDTO",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AgentConfigurationDTO"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "An object containing the publish date, the endpoint URL and the user's subscription key"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/train": {
+      "post": {
+        "description": "\r\n            gets the trained model predictions for the input example\r\n            ",
+        "operationId": "train - Train",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary of each model Guid and its corresponding training status"
+          }
+        }
+      },
+      "get": {
+        "description": "\r\n            gets the training status of all models of the specified application\r\n            ",
+        "operationId": "train - Training Status",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. The application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary of each model Guid and its corresponding training status"
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "operationId": "subscriptions - get Subscriptions",
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      },
+      "post": {
+        "operationId": "subscriptions - Add Subscription Key",
+        "parameters": [
+          {
+            "name": "subscriptionKey",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionKey"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionKey}": {
+      "delete": {
+        "operationId": "subscriptions - delete Subscription By Key",
+        "parameters": [
+          {
+            "name": "subscriptionKey",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/actions": {
+      "post": {
+        "description": "\r\n            Adds an action to the application\r\n            ",
+        "operationId": "actions - Add Action To Intent",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "readableActionWithParameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ReadableActionWithParameters"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "The action ID"
+          }
+        }
+      },
+      "get": {
+        "description": "\r\n            gets all created actions in application\r\n            ",
+        "operationId": "actions - get Application Actions",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of action objects"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/actions/{actionId}": {
+      "get": {
+        "description": "\r\n            gets all created actions in application\r\n            ",
+        "operationId": "actions - get Application Action",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "actionId",
+            "in": "path",
+            "description": "Format - guid. Action ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Action object"
+          }
+        }
+      },
+      "put": {
+        "description": "\r\n            Edits an action object\r\n            ",
+        "operationId": "actions - Update Action",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "actionId",
+            "in": "path",
+            "description": "Format - guid. Action ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "readableActionWithParameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ReadableActionWithParameters"
+            }
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Status code"
+          }
+        }
+      },
+      "delete": {
+        "description": "\r\n            deletes an action from application\r\n            ",
+        "operationId": "actions - delete Action",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "actionId",
+            "in": "path",
+            "description": "Format - guid. Action ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status code"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/publishConfigurations": {
+      "get": {
+        "description": "\r\n            get the publish configurations of Panama actions for an application\r\n            ",
+        "operationId": "publishConfigurations - get Publish Configurations",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the configuration object if the application has panama action bindings, otherwise null is returned"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/queryLogs": {
+      "get": {
+        "operationId": "queryLogs - Download Application Query Logs",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "null"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/actionChannels": {
+      "get": {
+        "description": "\r\n            gets a list of all available action channels for the application\r\n            ",
+        "operationId": "actionChannels - get Available Action Channels",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "Format - guid. Application ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of action channels"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DiceRegexFeature": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Pattern": {
+          "type": "string"
+        },
+        "IsActive": {
+          "type": "boolean"
+        },
+        "Editable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "DiceDictionaryFeature": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Phrases": {
+          "type": "string"
+        },
+        "IsActive": {
+          "type": "boolean"
+        },
+        "Mode": {
+          "type": "string"
+        },
+        "Editable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ExampleLabel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ExampleText": {
+          "type": "string"
+        },
+        "SelectedIntentName": {
+          "type": "string"
+        },
+        "EntityLabels": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/EntityLabel"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "EntityLabel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "EntityType": {
+          "type": "string"
+        },
+        "StartToken": {
+          "type": "integer"
+        },
+        "EndToken": {
+          "type": "integer"
+        }
+      }
+    },
+    "HierarchicalModel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Children": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "IntentModel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        }
+      }
+    },
+    "ApplicationInfo": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "format": "guid"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "Culture": {
+          "type": "string"
+        },
+        "Active": {
+          "type": "boolean"
+        },
+        "CreatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "PublishDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "URL": {
+          "type": "string"
+        },
+        "AuthKey": {
+          "type": "string"
+        },
+        "NumberOfIntents": {
+          "type": "integer"
+        },
+        "NumberOfEntities": {
+          "type": "integer"
+        },
+        "IsTrained": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JSONApp": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "culture": {
+          "type": "string"
+        },
+        "intents": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/HierarchicalModel"
+          },
+          "type": "array"
+        },
+        "entities": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/HierarchicalModel"
+          },
+          "type": "array"
+        },
+        "bing_entities": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "actions": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONAction"
+          },
+          "type": "array"
+        },
+        "model_features": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONModelFeature"
+          },
+          "type": "array"
+        },
+        "regex_features": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONRegexFeature"
+          },
+          "type": "array"
+        },
+        "utterances": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONUtterance"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "JSONAction": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "actionName": {
+          "type": "string"
+        },
+        "intentName": {
+          "type": "string"
+        },
+        "actionParameters": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONActionParam"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "JSONActionParam": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "parameterName": {
+          "type": "string"
+        },
+        "entityName": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JSONModelFeature": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "boolean"
+        },
+        "words": {
+          "type": "string"
+        },
+        "activated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JSONRegexFeature": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "activated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JSONUtterance": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "intent": {
+          "type": "string"
+        },
+        "entities": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/JSONEntity"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "JSONEntity": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "entity": {
+          "type": "string"
+        },
+        "startPos": {
+          "type": "integer"
+        },
+        "endPos": {
+          "type": "integer"
+        }
+      }
+    },
+    "AgentConfigurationDTO": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "BotFramework": {
+          "type": "object",
+          "description": "gets or sets the configuration related to Bot Framework.",
+          "$ref": "#/definitions/BotFrameworkConfigDTO"
+        },
+        "Slack": {
+          "type": "object",
+          "description": "gets or sets the configuration related to Slack.",
+          "$ref": "#/definitions/SlackConfigDTO"
+        }
+      },
+      "description": "This data transfer object represents the configuration of an agent.\n            It contains valid information even if the agent has not been deployed yet.\n            This information can be displayed to the developer in the LUIS\n            publish dialog."
+    },
+    "BotFrameworkConfigDTO": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Enabled": {
+          "type": "boolean",
+          "description": "gets or sets a value indicating whether the agent is enabled.\n            Only if it is enabled when publishing, it will respond to users\n            and perform their actions."
+        },
+        "AppId": {
+          "type": "string",
+          "description": "gets or sets the application ID of the corresponding bot\n            in the Bot Framework."
+        },
+        "SubscriptionKey": {
+          "type": "string",
+          "description": "gets or sets the application secret of the corresponding bot\n            in the Bot Framework."
+        },
+        "Endpoint": {
+          "type": "string",
+          "description": "gets or sets the endpoint that the developer should copy to\n            the Bot Framework.",
+          "format": "uri"
+        }
+      },
+      "description": "This data transfer object represents the configuration of an agent\n            that connects to Project Intercom (Bot Framework). It contains\n            valid information even if the agent has not been deployed yet."
+    },
+    "SlackConfigDTO": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Enabled": {
+          "type": "boolean",
+          "description": "gets or sets a value indicating whether the agent is enabled.\n            Only if it is enabled when publishing, it will respond to users\n            and perform their actions."
+        },
+        "ClientId": {
+          "type": "string",
+          "description": "gets or sets the client ID of the corresponding bot\n            in the Slack."
+        },
+        "ClientSecret": {
+          "type": "string",
+          "description": "gets or sets the client secret of the corresponding bot\n            in Slack."
+        },
+        "RedirectUri": {
+          "type": "string",
+          "description": "gets or sets the redirect URI that the developer should copy to\n            Slack.",
+          "format": "uri"
+        }
+      },
+      "description": "This data transfer object represents the configuration of an agent\n            that connects to Slack. It contains valid information even if the\n            agent has not been deployed yet."
+    },
+    "ReadableActionWithParameters": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ActionId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "ActionName": {
+          "type": "string"
+        },
+        "IntentName": {
+          "type": "string"
+        },
+        "Dialog": {
+          "type": "object",
+          "$ref": "#/definitions/DialogInfo"
+        },
+        "ActionParameters": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ReadableParameter"
+          },
+          "type": "object"
+        },
+        "Channel": {
+          "type": "object",
+          "$ref": "#/definitions/Channel"
+        }
+      }
+    },
+    "DialogInfo": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "DialogId": {
+          "type": "string"
+        },
+        "CustomerId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "AccessKey": {
+          "type": "string"
+        }
+      }
+    },
+    "ReadableParameter": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ParameterId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "ParameterName": {
+          "type": "string"
+        },
+        "EntityName": {
+          "type": "string"
+        },
+        "Required": {
+          "type": "boolean"
+        },
+        "Question": {
+          "type": "string"
+        },
+        "Order": {
+          "type": "integer"
+        },
+        "PhraseListId": {
+          "type": "string"
+        }
+      }
+    },
+    "Channel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Method": {
+          "type": "string"
+        },
+        "Settings": {
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Setting"
+          },
+          "type": "object"
+        }
+      }
+    },
+    "Setting": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      }
+    },
+    "ExampleLabelArray": {
+      "items": {
+        "type": "object",
+        "$ref": "#/definitions/ExampleLabel"
+      },
+      "type": "object"
+    },
+    "PrebuiltExtractorNames": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "Examples": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "SubscriptionKey": {
+      "type": "string"
+    }
+  }
+}

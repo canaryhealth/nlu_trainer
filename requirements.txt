@@ -1,0 +1,6 @@
+aadict                  == 0.2.2
+asset                   == 0.6.10
+  # globre, aadict
+requests                == 2.2.1
+pyswagger               == 0.8.22
+  # six pyaml validate-email PyYAML
