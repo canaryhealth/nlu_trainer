@@ -8,12 +8,12 @@ nlu_trainer provides an easy way to train and test Natural Language Understandin
 Training
 ========
 
-Start by creating a training set where each line contains text, its intent, and named enitities.
+Start by creating a training set where each line contains text, its intent, and named entities (in yaml format).
 
 .. code:: text
 
-  What is a loggerhead turtle?, define, {'animal': 'loggerhead turtle'}
-  What are bengal tigers?, define, {'animal': 'bengal tigers'}
+  What is a loggerhead turtle?,define,{ animal: loggerhead turtle }
+  What are bengal tigers?,define,{ animal: bengal tigers }
 
 
 Then run:
@@ -26,3 +26,8 @@ Then run:
 Testing
 =======
 
+Create a testing set using the same format as the training set, then run:
+
+.. code:: shell
+
+  python cli.py test settings.ini test_set.txt
