@@ -27,8 +27,7 @@ UPDATE_POST     = 'train - Train'
 class LuisTrainer(NluTrainer):
 
   def __init__(self, settings):
-    self.sub_key = settings.sub_key
-    self.app_id  = settings.app_id
+    self.settings = settings
     # create a customized primitive factory for int because library
     # impractically chooses not to set default (b/t int32 vs int64) b/c
     # the Swagger/OpenAPI spec doesn't
@@ -44,26 +43,25 @@ class LuisTrainer(NluTrainer):
 
 
   def _request(self, op, body=None):
-    params = dict(appId = self.app_id)
+    params = dict(appId = self.settings.app_id)
     if body:
       params.update(body)
     req, res = self.app.op[op](**params)
-    req.header['Ocp-Apim-Subscription-Key'] = self.sub_key
-    return self.client.request((req, res))
+    req.header['Ocp-Apim-Subscription-Key'] = self.settings.sub_key
+    response = self.client.request((req, res))
+    if response.status != 201:
+      pass  # todo: implement error handling
+    return response
 
 
   def add_intent(self, intent):
     response = self._request(INTENT_POST,
                              dict(intentModel = {'Name': intent}))
-    if response.status != 201:
-      pass # todo: log
 
 
   def add_entity(self, entity):
     response = self._request(ENTITY_POST,
                              dict(hierarchicalModel = {'Name': entity}))
-    if response.status != 201:
-      pass # todo: log
 
 
   def add_synonyms(self, synonyms):
@@ -83,8 +81,6 @@ class LuisTrainer(NluTrainer):
                              dict(exampleLabel = {'ExampleText': text,
                                                   'SelectedIntentName': intent,
                                                   'EntityLabels': labels}))
-    if response.status != 201:
-      pass # todo: log
 
 
   def predict(self, text):

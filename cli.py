@@ -29,12 +29,12 @@ def main(args=None):
   settings = aadict(cp.items('nlu_trainer'))
 
   trainer = asset.symbol(settings.driver)(settings)
-  if options.command == TRAIN:
-    with open(options.dataset) as csv_file:
-      r = csv.reader(csv_file)
+  with open(options.dataset) as csv_file:
+    r = csv.reader(csv_file)
+    if options.command == TRAIN:
       trainer.train_set(r)
-  # elif options.command == TEST:
-  #   trainer.test_set(options.dataset)
+    elif options.command == TEST:
+      trainer.test_set(r)
 
 #------------------------------------------------------------------------------
 main()
