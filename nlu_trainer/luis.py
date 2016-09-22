@@ -23,8 +23,18 @@ PHRASELIST_POST = 'phraselists - Create New Dictionary'
 PREDICT_GET     = 'predict - get Trained Model Predictions'
 UPDATE_POST     = 'train - Train'
 
+ENTITY_GET      = 'entities - get Entity Info'
+ENTITY_DELETE   = 'entities - delete Entity Model'
+ENTITIES_GET    = 'entities - get Entity Infos'
+EXAMPLE_DELETE  = 'examples - delete Example Labels'
+EXAMPLES_GET    = 'examples - Review Labeled Utterances'
+INTENT_DELETE   = 'intents - delete Intent Model'
+INTENTS_GET     = 'intents - get Intent Infos'
+PHRASELISTS_GET = 'phraselists - get Phraselists'
+
 
 class LuisTrainer(NluTrainer):
+  # TODO: formalize/abstract return values
 
   def __init__(self, settings):
     self.settings = settings
@@ -49,19 +59,19 @@ class LuisTrainer(NluTrainer):
     req, res = self.app.op[op](**params)
     req.header['Ocp-Apim-Subscription-Key'] = self.settings.sub_key
     response = self.client.request((req, res))
-    if response.status != 201:
-      pass  # todo: implement error handling
-    return response
+    # todo: implement error handling
+    if response.raw:
+      return json.loads(response.raw)
 
 
   def add_intent(self, intent):
-    response = self._request(INTENT_POST,
-                             dict(intentModel = {'Name': intent}))
+    return self._request(INTENT_POST,
+                         dict(intentModel = {'Name': intent}))
 
 
   def add_entity(self, entity):
-    response = self._request(ENTITY_POST,
-                             dict(hierarchicalModel = {'Name': entity}))
+    return self._request(ENTITY_POST,
+                         dict(hierarchicalModel = {'Name': entity}))
 
 
   def add_synonyms(self, synonyms):
@@ -77,10 +87,10 @@ class LuisTrainer(NluTrainer):
                        'StartToken': index[0],
                        'EndToken': index[1]})
 
-    response = self._request(EXAMPLE_POST,
-                             dict(exampleLabel = {'ExampleText': text,
-                                                  'SelectedIntentName': intent,
-                                                  'EntityLabels': labels}))
+    return self._request(EXAMPLE_POST,
+                         dict(exampleLabel = {'ExampleText': text,
+                                              'SelectedIntentName': intent,
+                                              'EntityLabels': labels}))
 
 
   def predict(self, text):
@@ -88,19 +98,53 @@ class LuisTrainer(NluTrainer):
     score = None
     entities = {}
 
-    response = self._request(PREDICT_GET, dict(example = text))
-    if response.status == 200:
-      body = aadict.d2ar(json.loads(response.raw))
-      for i in body.IntentsResults:
-        # returns the intent with the highest score
-        if i.score > score:
-          score = i.score
-          intent = i.Name
-      for e in body.EntitiesResults:
-         entities[e.name] = e.word
+    body = aadict.d2ar(self._request(PREDICT_GET, dict(example = text)))
+    for i in body.IntentsResults:
+      # returns the intent with the highest score
+      if i.score > score:
+        score = i.score
+        intent = i.Name
+    for e in body.EntitiesResults:
+      # hack-alert: luis, why do you add spaces around hyphens and apostrophes?!?
+      entities[e.name] = e.word.lower().replace(' - ', '-').replace(" ' ", "'")
 
     return (text, intent, entities, score)
 
 
   def update(self):
-    response = self._request(UPDATE_POST)
+    return self._request(UPDATE_POST)
+
+  #----------------------------------------------------------------------------
+  # todo: add/include the following in the api interface?
+
+  def get_intents(self):
+    return self._request(INTENTS_GET)
+
+
+  def delete_intent(self, intent_id):
+    return self._request(INTENT_DELETE, dict(intentId=intent_id))
+
+
+  def get_entity(self, entity_id):
+    return self._request(ENTITY_GET, dict(entityId=entity_id))
+
+
+  def get_entities(self):
+    return self._request(ENTITIES_GET)
+
+
+  def delete_entity(self, entity_id):
+    return self._request(ENTITY_DELETE, dict(entityId=entity_id))
+
+
+  def get_examples(self):
+    return self._request(EXAMPLES_GET, dict(skip=0, count=10))
+
+
+  def delete_example(self, example_id):
+    return self._request(EXAMPLE_DELETE, dict(exampleId=example_id))
+
+
+  def get_synonyms(self):
+    pass
+
