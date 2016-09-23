@@ -3,6 +3,7 @@
 Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
 import json
+import time
 
 from aadict import aadict
 import asset
@@ -14,6 +15,7 @@ from pyswagger.utils import jp_compose
 
 from . import util
 from .api import NluTrainer
+from .duration import asdur
 
 
 ENTITY_POST     = 'entities - Create Entity Extractor'
@@ -22,6 +24,7 @@ INTENT_POST     = 'intents - Create Intent Classifier'
 PHRASELIST_POST = 'phraselists - Create New Dictionary'
 PREDICT_GET     = 'predict - get Trained Model Predictions'
 UPDATE_POST     = 'train - Train'
+UPDATE_GET      = 'train - Training Status'
 
 ENTITY_GET      = 'entities - get Entity Info'
 ENTITY_DELETE   = 'entities - delete Entity Model'
@@ -112,7 +115,16 @@ class LuisTrainer(NluTrainer):
 
 
   def update(self):
-    return self._request(UPDATE_POST)
+    self._request(UPDATE_POST)
+    while True:
+      time.sleep(asdur(self.settings.status_polling_interval))
+      status = [ i['Details']['Status'] for i in self._request(UPDATE_GET) ]
+      if 'In progress' not in set(status):
+        break
+
+
+  def get_update(self):
+    return self._request(UPDATE_GET)
 
   #----------------------------------------------------------------------------
   # todo: add/include the following in the api interface?
