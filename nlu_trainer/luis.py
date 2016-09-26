@@ -2,11 +2,13 @@
 '''
 Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
+import re
 import json
 import time
 
 from aadict import aadict
 import asset
+import morph
 from pyswagger import SwaggerApp
 from pyswagger.contrib.client.requests import Client
 from pyswagger.primitives import SwaggerPrimitive
@@ -67,6 +69,24 @@ class LuisTrainer(NluTrainer):
       return json.loads(response.raw)
 
 
+  def _sanitize(self, text):
+    '''
+    Emulates behavior where LUIS lowercases the input and pads spaces for
+    "special" chars.
+    '''
+    CHARS = '"\',.-'  # based on observation and may not be exhaustive
+    text = text.lower().strip()
+    # todo: improve this poor man's way of tokenizing
+    t = text.split(' ')
+    for idx, val in enumerate(t):
+      for c in CHARS:
+        if c in val:
+          p = re.compile('(%s)+' % c)
+          # use filter in case c is at bookends
+          t[idx] = filter(None, re.split(p, val))
+    return ' '.join(morph.flatten(t))
+
+
   def add_intent(self, intent):
     return self._request(INTENT_POST,
                          dict(intentModel = {'Name': intent}))
@@ -108,10 +128,9 @@ class LuisTrainer(NluTrainer):
         score = i.score
         intent = i.Name
     for e in body.EntitiesResults:
-      # hack-alert: luis, why do you add spaces around hyphens and apostrophes?!?
-      entities[e.name] = e.word.lower().replace(' - ', '-').replace(" ' ", "'")
+      entities[e.name] = e.word
 
-    return (text, intent, entities, score)
+    return (body.utteranceText, intent, entities, score)
 
 
   def update(self):
@@ -159,4 +178,3 @@ class LuisTrainer(NluTrainer):
 
   def get_synonyms(self):
     pass
-

@@ -17,7 +17,7 @@ class NluTrainer(object):
     Trains dataset with NLU.
     '''
     for text, intent, entities in dataset:
-      self.train(text.lower(), intent.lower(), yaml.load(entities.lower()))
+      self.train(text, intent, yaml.load(entities))
     self.update()
 
 
@@ -35,14 +35,17 @@ class NluTrainer(object):
           def test_prediction(self):
             time.sleep(asdur(test_throttle))
             text2, intent, entities, score = trainer.predict(text)
-            self.assertEqual(text2, text)
+            self.assertEqual(text2, text.lower())
             self.assertEqual(intent, expected_intent)
-            self.assertEqual(entities, expected_entities)
+            self.assertEqual(
+              entities,
+              { k: trainer._sanitize(v) for k, v in expected_entities.items() })
             if trainer.settings.score_threshold:
-              self.assertGreaterEqual(score, float(trainer.settings.score_threshold))
+              self.assertGreaterEqual(score,
+                                      float(trainer.settings.score_threshold))
           return test_prediction
         for text, intent, entities in dataset:
-          test_name = "test_%s" % text.lower().replace(' ', '_')
+          test_name = "test_%s" % text.replace(' ', '_')
           dict[test_name] = gen_test(trainer, test_throttle,
                                      text, intent, yaml.load(entities))
         return type.__new__(mcs, name, bases, dict)
@@ -83,7 +86,7 @@ class NluTrainer(object):
     are.
 
       ex: train('what is a loggerhead turtle', 'define',
-                {'animal': 'loggerhead turtle'})
+                { animal: loggerhead turtle })
     '''
     raise NotImplementedError()
 
@@ -95,7 +98,7 @@ class NluTrainer(object):
       ex: >>> predict('what is a bengal tiger')
           { 'text': 'what is a bengal tiger',
             'intent': 'define',
-            'entities": {'animal': 'bengal tiger'},
+            'entities": { animal: bengal tiger},
             'score': 0.9408 }
     '''
     raise NotImplementedError()
