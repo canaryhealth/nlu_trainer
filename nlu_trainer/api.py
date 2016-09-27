@@ -16,8 +16,18 @@ class NluTrainer(object):
     '''
     Trains dataset with NLU.
     '''
+    intent_list = []
+    entities_list = []
     for text, intent, entities in dataset:
-      self.train(text, intent, yaml.load(entities))
+      if intent not in intent_list:
+        intent_list.append(intent)
+        self.add_intent(intent)
+      entities = yaml.load(entities)
+      for entity in entities.keys():
+        if entity not in entities_list:
+          entities_list.append(entity)
+          self.add_entity(entity)
+      self.train(text, intent, entities)
     self.update()
 
 
