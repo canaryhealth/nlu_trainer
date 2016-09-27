@@ -21,6 +21,17 @@ class NluTrainer(object):
     self.update()
 
 
+  def predict_set(self, dataset):
+    results = []
+    try:
+      for text in dataset:
+        # TODO: the entities returned by LUIS would be sanitized and not match
+        #       the text
+        results.append(self.predict(text))
+    finally:
+      return results
+
+
   def test_set(self, dataset):
     '''
     Tests dataset against NLU.
