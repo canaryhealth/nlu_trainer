@@ -11,6 +11,7 @@ from .duration import asdur
 
 
 class NluTrainer(object):
+  # todo: properly handle locale. currently ignores value
 
   def train_set(self, dataset):
     '''
@@ -18,7 +19,7 @@ class NluTrainer(object):
     '''
     intent_list = []
     entities_list = []
-    for text, intent, entities in dataset:
+    for locale, text, intent, entities in dataset:
       if intent not in intent_list:
         intent_list.append(intent)
         self.add_intent(intent)
@@ -34,10 +35,10 @@ class NluTrainer(object):
   def predict_set(self, dataset):
     results = []
     try:
-      for text in dataset:
+      for locale, text in dataset:
         # TODO: the entities returned by LUIS would be sanitized and not match
         #       the text
-        results.append(self.predict(text))
+        results.append((locale,) + self.predict(text))
     finally:
       return results
 
@@ -65,7 +66,7 @@ class NluTrainer(object):
               self.assertGreaterEqual(score,
                                       float(trainer.settings.score_threshold))
           return test_prediction
-        for text, intent, entities in dataset:
+        for locale, text, intent, entities in dataset:
           test_name = "test_%s" % text.replace(' ', '_')
           dict[test_name] = gen_test(trainer, test_throttle,
                                      text, intent, yaml.load(entities))

@@ -12,8 +12,8 @@ Start by creating a training set where each line contains text, its intent, and 
 
 .. code:: text
 
-  What is a loggerhead turtle?,define,{ animal: loggerhead turtle }
-  What are bengal tigers?,define,{ animal: bengal tigers }
+  en-us,What is a loggerhead turtle?,define,{ animal: loggerhead turtle }
+  en-us,What are bengal tigers?,define,{ animal: bengal tigers }
 
 
 Then run:
