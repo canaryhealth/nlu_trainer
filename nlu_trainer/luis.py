@@ -58,6 +58,7 @@ class LuisTrainer(NluTrainer):
 
 
   def _request(self, op, body=None):
+    time.sleep(asdur(self.settings.req_throttle))
     params = dict(appId = self.settings.app_id)
     if body:
       params.update(body)

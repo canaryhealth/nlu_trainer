@@ -2,12 +2,9 @@
 '''
 Interface for `NluTrainer`.
 '''
-import time
 import unittest
 
 import yaml
-
-from .duration import asdur
 
 
 class NluTrainer(object):
@@ -23,7 +20,7 @@ class NluTrainer(object):
       if intent not in intent_list:
         intent_list.append(intent)
         self.add_intent(intent)
-      entities = yaml.load(entities)
+      entities = yaml.load(entities) or {}
       for entity in entities.keys():
         if entity not in entities_list:
           entities_list.append(entity)
@@ -48,14 +45,11 @@ class NluTrainer(object):
     Tests dataset against NLU.
     '''
     trainer = self
-    test_throttle = self.settings.test_throttle
 
     class TestNluMeta(type):
       def __new__(mcs, name, bases, dict):
-        def gen_test(trainer, test_throttle,
-                     text, expected_intent, expected_entities):
+        def gen_test(trainer, text, expected_intent, expected_entities):
           def test_prediction(self):
-            time.sleep(asdur(test_throttle))
             text2, intent, entities, score = trainer.predict(text)
             self.assertEqual(text2, text.lower())
             self.assertEqual(intent, expected_intent)
@@ -68,8 +62,7 @@ class NluTrainer(object):
           return test_prediction
         for locale, text, intent, entities in dataset:
           test_name = "test_%s" % text.replace(' ', '_')
-          dict[test_name] = gen_test(trainer, test_throttle,
-                                     text, intent, yaml.load(entities))
+          dict[test_name] = gen_test(trainer, text, intent, yaml.load(entities))
         return type.__new__(mcs, name, bases, dict)
 
     class TestNlu(unittest.TestCase):
