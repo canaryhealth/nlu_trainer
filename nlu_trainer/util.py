@@ -9,6 +9,7 @@ def phrase_index(sentence, phrase):
                          'brown fox jumps')
         (10, 24)
   '''
+  phrase = str(phrase)  # in case phrase is a number
   index = sentence.find(phrase)
   if index >= 0:
     return (index, index+len(phrase)-1)
