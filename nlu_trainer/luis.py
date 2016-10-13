@@ -4,6 +4,7 @@ Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
 import re
 import json
+import os
 import time
 
 from aadict import aadict
@@ -50,9 +51,10 @@ class LuisTrainer(NluTrainer):
     int_factory = SwaggerPrimitive()
     int_factory.register('integer', '', create_int, validate_int)
     int_factory.register('integer', None, create_int, validate_int)
-    # todo: fix path
-    self.app = SwaggerApp.load('nlu_trainer/luis_api-1.0.swagger.json',
-                               prim=int_factory)
+    self.app = SwaggerApp.load(
+      os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                   'luis_api-1.0.swagger.json'),
+      prim=int_factory)
     self.app.prepare()
     self.client = Client()
 
