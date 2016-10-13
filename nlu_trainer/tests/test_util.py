@@ -20,3 +20,9 @@ class TestUtil(unittest.TestCase):
       util.phrase_index('the quick brown fox jumps over the lazy dog',
                         'cheshire cat')
     )
+    self.assertEqual(
+      util.phrase_index('99 bottles of beer on the wall',
+                        '99'),
+      (0, 1)
+    )
+
