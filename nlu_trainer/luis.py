@@ -2,7 +2,6 @@
 '''
 Driver for Microsoft Language Understanding Intelligent Service (LUIS) API.
 '''
-import re
 import json
 import os
 import time
@@ -77,16 +76,17 @@ class LuisTrainer(NluTrainer):
     Emulates behavior where LUIS lowercases the input and pads spaces for
     "special" chars.
     '''
-    CHARS = '"\',.-'  # based on observation and may not be exhaustive
+    CHARS = '"\',.-()'  # based on observation and may not be exhaustive
+    if not isinstance(text, (str, unicode)):
+      text = unicode(text)
     text = text.lower().strip()
     # todo: improve this poor man's way of tokenizing
     t = text.split(' ')
     for idx, val in enumerate(t):
       for c in CHARS:
         if c in val:
-          p = re.compile('(%s)+' % c)
-          # use filter in case c is at bookends
-          t[idx] = filter(None, re.split(p, val))
+          val = val.replace(c, ' %s ' % c)  # pad c with spaces
+          t[idx] = val.split()
     return ' '.join(morph.flatten(t))
 
 
