@@ -53,9 +53,10 @@ class NluTrainer(object):
             text2, intent, entities, score = trainer.predict(text)
             self.assertEqual(text2, text.lower())
             self.assertEqual(intent, expected_intent)
-            self.assertEqual(
-              entities,
-              { k: trainer._sanitize(v) for k, v in expected_entities.items() })
+            if expected_entities:
+              self.assertEqual(
+                entities,
+                { k: trainer._sanitize(v) for k, v in expected_entities.items() })
             if trainer.settings.score_threshold:
               self.assertGreaterEqual(score,
                                       float(trainer.settings.score_threshold))
