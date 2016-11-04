@@ -14,30 +14,39 @@ from pyswagger.contrib.client.requests import Client
 from pyswagger.primitives import SwaggerPrimitive
 from pyswagger.primitives._int import validate_int, create_int
 from pyswagger.utils import jp_compose
+from requests.exceptions import HTTPError
 
 from . import util
 from .api import NluTrainer
 from .duration import asdur
 
 
-ENTITY_POST     = 'entities - Create Entity Extractor'
-EXAMPLE_POST    = 'example - Add Label'
-INTENT_POST     = 'intents - Create Intent Classifier'
-PHRASELIST_POST = 'phraselists - Create New Dictionary'
-PREDICT_GET     = 'predict - get Trained Model Predictions'
-UPDATE_POST     = 'train - Train'
-UPDATE_GET      = 'train - Training Status'
+ENTITY_POST       = 'entities - Create Entity Extractor'
+PB_ENTITY_POST    = 'prebuilts - Add Prebuilt Entity Extractor'
+EXAMPLE_POST      = 'example - Add Label'
+INTENT_POST       = 'intents - Create Intent Classifier'
+PHRASELIST_POST   = 'phraselists - Create New Dictionary'
+PREDICT_GET       = 'predict - get Trained Model Predictions'
+UPDATE_POST       = 'train - Train'
+UPDATE_GET        = 'train - Training Status'
 
-ENTITY_GET      = 'entities - get Entity Info'
-ENTITY_DELETE   = 'entities - delete Entity Model'
-ENTITIES_GET    = 'entities - get Entity Infos'
-EXAMPLE_DELETE  = 'examples - delete Example Labels'
-EXAMPLES_GET    = 'examples - Review Labeled Utterances'
-INTENT_DELETE   = 'intents - delete Intent Model'
-INTENTS_GET     = 'intents - get Intent Infos'
-PHRASELISTS_GET = 'phraselists - get Phraselists'
+ENTITIES_GET      = 'entities - get Entity Infos'
+PB_ENTITIES_GET   = 'prebuilts - get Prebuilt Infos'
+ENTITY_GET        = 'entities - get Entity Info'
+PB_ENTITY_GET     = 'prebuilts - get Prebuilt Info'
+ENTITY_DELETE     = 'entities - delete Entity Model'
+PB_ENTITY_DELETE  = 'prebuilts - delete Prebuilt Model'
+EXAMPLE_DELETE    = 'examples - delete Example Labels'
+EXAMPLES_GET      = 'examples - Review Labeled Utterances'
+INTENT_DELETE     = 'intents - delete Intent Model'
+INTENTS_GET       = 'intents - get Intent Infos'
+PHRASELISTS_GET   = 'phraselists - get Phraselists'
 
+# todo: geography, encyclopedia, and datetime has more children
+BUILTIN_ENTITIES  = ['number', 'ordinal', 'temperature', 'dimension', 'money',
+                     'age', 'geography', 'encyclopedia', 'datetime']
 
+#------------------------------------------------------------------------------
 class LuisTrainer(NluTrainer):
   # TODO: formalize/abstract return values
 
@@ -66,9 +75,24 @@ class LuisTrainer(NluTrainer):
     req, res = self.app.op[op](**params)
     req.header['Ocp-Apim-Subscription-Key'] = self.settings.sub_key
     response = self.client.request((req, res))
-    # todo: implement error handling
+
+    ret = None
     if response.raw:
-      return json.loads(response.raw)
+      ret = json.loads(response.raw)
+
+    # pyswagger requires "requests" library... but roll their own request/
+    # response object. copying raise_for_status() functionality...
+    http_error_msg = ''
+    if 400 <= response.status < 500:
+      http_error_msg = '%s Client Error: %s' % (response.status,
+                                                ret['error']['message'])
+    elif 500 <= response.status < 600:
+      http_error_msg = '%s Server Error: %s' % (response.status,
+                                                ret['error']['message'])
+    if http_error_msg:
+      raise HTTPError(http_error_msg, response=response)
+
+    return ret
 
 
   def _sanitize(self, text):
@@ -96,6 +120,10 @@ class LuisTrainer(NluTrainer):
 
 
   def add_entity(self, entity):
+    if entity in BUILTIN_ENTITIES:
+      # returning prebuilt entity id to normalize response
+      return self._request(PB_ENTITY_POST,
+                           dict(prebuiltExtractorNames = entity))[0]['id']
     return self._request(ENTITY_POST,
                          dict(hierarchicalModel = {'Name': entity}))
 
@@ -149,31 +177,34 @@ class LuisTrainer(NluTrainer):
     return self._request(UPDATE_GET)
 
   #----------------------------------------------------------------------------
-  # todo: add/include the following in the api interface?
+  # todo: should we expose the following in the api interface?
 
   def get_intents(self):
     return self._request(INTENTS_GET)
-
 
   def delete_intent(self, intent_id):
     return self._request(INTENT_DELETE, dict(intentId=intent_id))
 
 
-  def get_entity(self, entity_id):
-    return self._request(ENTITY_GET, dict(entityId=entity_id))
-
-
   def get_entities(self):
-    return self._request(ENTITIES_GET)
+    return self._request(ENTITIES_GET) + self._request(PB_ENTITIES_GET)
 
+  # untested/not currently used
+  # def get_entity(self, entity_id):
+  #   self._request(ENTITY_GET, dict(entityId=entity_id))
+  #   self._request(PB_ENTITY_GET, dict(prebuiltId=entity_id))
 
   def delete_entity(self, entity_id):
-    return self._request(ENTITY_DELETE, dict(entityId=entity_id))
+    try:
+      return self._request(ENTITY_DELETE, dict(entityId=entity_id))
+    except HTTPError as e:
+      if 'prebuilt' in e.message:
+        return self._request(PB_ENTITY_DELETE, dict(prebuiltId=entity_id))
+      raise e
 
 
   def get_examples(self):
     return self._request(EXAMPLES_GET, dict(skip=0, count=10))
-
 
   def delete_example(self, example_id):
     return self._request(EXAMPLE_DELETE, dict(exampleId=example_id))

@@ -4,6 +4,7 @@ Interface for `NluTrainer`.
 '''
 import unittest
 
+from requests.exceptions import HTTPError
 import yaml
 
 
@@ -19,12 +20,21 @@ class NluTrainer(object):
     for locale, text, intent, entities in dataset:
       if intent not in intent_list:
         intent_list.append(intent)
-        self.add_intent(intent)
+        try:
+          self.add_intent(intent)
+        except HTTPError as e:
+          if 'already exists' not in e.message:
+            raise e
       entities = yaml.load(entities) or {}
       for entity in entities.keys():
         if entity not in entities_list:
           entities_list.append(entity)
-          self.add_entity(entity)
+          try:
+            self.add_entity(entity)
+          except HTTPError as e:
+            if not ('already contains' in e.message  # prebuilt-entities
+                    or 'already exists' in e.message):  # entities
+              raise e
       self.train(text, intent, entities)
     self.update()
 

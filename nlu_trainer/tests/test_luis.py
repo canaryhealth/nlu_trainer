@@ -54,15 +54,18 @@ class LuisApiTestCase(unittest.TestCase):
     # test add
     c_id = self.trainer.add_entity('ccc')
     d_id = self.trainer.add_entity('ddd')
+    num_id = self.trainer.add_entity('number')
     self.assertItemsEqual(
       self.trainer.get_entities(),
       [ dict(id = c_id, name = 'ccc', type = 'Entity Extractor'),
         dict(id = d_id, name = 'ddd', type = 'Entity Extractor'),
+        dict(id = num_id, name = 'number', type = 'Prebuilt Entity Extractor'),
       ]
     )
     # test delete
     self.trainer.delete_entity(c_id)
     self.trainer.delete_entity(d_id)
+    self.trainer.delete_entity(num_id)
     self.assertEquals(len(self.trainer.get_entities()), 0)
 
 
