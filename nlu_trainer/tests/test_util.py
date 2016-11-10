@@ -25,4 +25,15 @@ class TestUtil(unittest.TestCase):
                         '99'),
       (0, 1)
     )
-
+    self.assertEqual(
+      util.phrase_index(
+        'the term co.payment can be abbreviated as co.pay if you like',
+        'co.pay'),
+      (42, 47)
+    )
+    self.assertEqual(
+      util.phrase_index(
+        'xx  xx  xx registered nurses  xxxxx registered nurse xx xx xx xxxx xx xxxx',
+        'registered nurse'),
+      (36, 51)
+    )

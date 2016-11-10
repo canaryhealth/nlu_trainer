@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 def phrase_index(sentence, phrase):
   '''
@@ -10,7 +11,9 @@ def phrase_index(sentence, phrase):
         (10, 24)
   '''
   phrase = str(phrase)  # in case phrase is a number
-  index = sentence.find(phrase)
-  if index >= 0:
-    return (index, index+len(phrase)-1)
+  m = re.match(r'(.*?)\b'+re.escape(phrase)+r'\b', sentence)
+  if m:
+    # group 0 and 1 returns the match with and without the phrase respectively
+    l = len(m.group(1))
+    return (l, l+len(phrase)-1)
   return None
