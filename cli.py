@@ -38,32 +38,32 @@ def main(args=None):
     with open(options.dataset, 'rb') as csv_file:
       r = csv.reader(csv_file)
       if options.command == TRAIN:
-        trainer.train_set(r)
+        trainer.train_set(settings.app_id, r)
       elif options.command == TEST:
-        trainer.test_set(r)
+        trainer.test_set(settings.app_id, r)
       elif options.command == PREDICT:
-        predictions = trainer.predict_set(r)
+        predictions = trainer.predict_set(settings.app_id, r)
   elif options.command == PURGE:
-    purge(trainer)
+    purge(trainer, settings)
 
   if options.command == PREDICT:
     w = csv.writer(sys.stdout)
     w.writerows(predictions)
 
 
-def purge(trainer):
+def purge(trainer, settings):
   # delete examples
-  for e_id in [ x['exampleId'] for x in trainer.get_examples() ]:
-    trainer.delete_example(e_id)
+  for e_id in [ x['exampleId'] for x in trainer.get_examples(settings.app_id) ]:
+    trainer.delete_example(settings.app_id, e_id)
   # delete intent
-  for i in trainer.get_intents():
+  for i in trainer.get_intents(settings.app_id):
     if i['name'] != 'None':
-      trainer.delete_intent(i['id'])
+      trainer.delete_intent(settings.app_id, i['id'])
   # delete entities
-  for e_id in [ x['id'] for x in trainer.get_entities() ]:
-    trainer.delete_entity(e_id)
+  for e_id in [ x['id'] for x in trainer.get_entities(settings.app_id) ]:
+    trainer.delete_entity(settings.app_id, e_id)
 
-  trainer.update()
+  trainer.update(settings.app_id)
 
 #------------------------------------------------------------------------------
 main()
