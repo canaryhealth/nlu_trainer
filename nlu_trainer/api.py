@@ -11,7 +11,7 @@ import yaml
 class NluTrainer(object):
   # todo: properly handle locale. currently ignores value
 
-  def train_set(self, dataset):
+  def train_set(self, app_id, dataset):
     '''
     Trains dataset with NLU.
     '''
@@ -21,7 +21,7 @@ class NluTrainer(object):
       if intent not in intent_list:
         intent_list.append(intent)
         try:
-          self.add_intent(intent)
+          self.add_intent(app_id, intent)
         except HTTPError as e:
           if 'already exists' not in e.message:
             raise e
@@ -30,27 +30,27 @@ class NluTrainer(object):
         if entity not in entities_list:
           entities_list.append(entity)
           try:
-            self.add_entity(entity)
+            self.add_entity(app_id, entity)
           except HTTPError as e:
             if not ('already contains' in e.message  # prebuilt-entities
                     or 'already exists' in e.message):  # entities
               raise e
-      self.train(text, intent, entities)
-    self.update()
+      self.train(app_id, text, intent, entities)
+    self.update(app_id)
 
 
-  def predict_set(self, dataset):
+  def predict_set(self, app_id, dataset):
     results = []
     try:
       for locale, text in dataset:
         # TODO: the entities returned by LUIS would be sanitized and not match
         #       the text
-        results.append((locale,) + self.predict(text))
+        results.append((locale,) + self.predict(app_id, text))
     finally:
       return results
 
 
-  def test_set(self, dataset):
+  def test_set(self, app_id, dataset):
     '''
     Tests dataset against NLU.
     '''
@@ -60,7 +60,7 @@ class NluTrainer(object):
       def __new__(mcs, name, bases, dict):
         def gen_test(trainer, text, expected_intent, expected_entities):
           def test_prediction(self):
-            text2, intent, entities, score = trainer.predict(text)
+            text2, intent, entities, score = trainer.predict(app_id, text)
             self.assertEqual(text2, text.lower())
             self.assertEqual(intent, expected_intent)
             if expected_entities:
@@ -83,21 +83,21 @@ class NluTrainer(object):
     unittest.TextTestRunner().run(tests)
 
   #----------------------------------------------------------------------------
-  def add_intent(self, intent):
+  def add_intent(self, app_id, intent):
     '''
     Adds intent.
     '''
     raise NotImplementedError()
 
 
-  def add_entity(self, entity):
+  def add_entity(self, app_id, entity):
     '''
     Adds entity.
     '''
     raise NotImplementedError()
 
 
-  def add_synonyms(self, synonyms):
+  def add_synonyms(self, app_id, synonyms):
     '''
     Specify a set of words as synonyms.
 
@@ -106,7 +106,7 @@ class NluTrainer(object):
     raise NotImplementedError()
 
 
-  def train(self, text, intent, entities):
+  def train(self, app_id, text, intent, entities):
     '''
     Associates `text` with the `intent` and describe where the known entities
     are.
@@ -117,7 +117,7 @@ class NluTrainer(object):
     raise NotImplementedError()
 
 
-  def predict(self, text):
+  def predict(self, app_id, text):
     '''
     Predict the intent, entities, and score when given text.
 
@@ -130,7 +130,7 @@ class NluTrainer(object):
     raise NotImplementedError()
 
 
-  def update(self):
+  def update(self, app_id):
     '''
     Update the system with the latest trained data.
     '''
