@@ -51,6 +51,7 @@ APP_PUT           = 'apps - Update App'
 APP_DELETE        = 'apps - delete App'
 APP_IMPORT        = 'import - Import Application'
 APP_EXPORT        = 'export - Export Application'
+APP_PUBLISH       = 'publish - Publish Application'
 
 
 # todo: geography, encyclopedia, and datetime has more children
@@ -180,7 +181,8 @@ class LuisTrainer(NluTrainer):
     self._request(UPDATE_POST, dict(appId=app_id))
     while True:
       time.sleep(asdur(self.settings.status_polling_interval))
-      status = [ i['Details']['Status'] for i in self._request(UPDATE_GET) ]
+      status = [ i['Details']['Status']
+                 for i in self._request(UPDATE_GET, dict(appId=app_id)) ]
       if 'In progress' not in set(status):
         break
 
@@ -255,3 +257,8 @@ class LuisTrainer(NluTrainer):
 
   def export_app(self, app_id):
     return self._request(APP_EXPORT, dict(appId=app_id))
+
+
+  def publish_app(self, app_id):
+    # todo: support agentConfigurationDTO to enable subscription key assignment
+    return self._request(APP_PUBLISH, dict(appId=app_id))
